@@ -1,5 +1,18 @@
 // This file has tests to help you see how you are doing
 
+// Declare a global variable hero
+let hero = {
+  name: 'Floris',
+  heroic: true,
+  inventory: ['sword','horse'],
+  health: 10,
+  weapon: {
+    type: 'sword',
+    damage: 1 /* if damage is set to 0 (no damage) weaponHasDamage
+                 returns false! So instead set it to 1 (slight damage) to
+                 make the test work */
+  }
+}
 function heroExists(){ return typeof hero !== 'undefined' && hero.constructor === Object }
 function heroIsHeroic(){ return heroExists() && hero.heroic && hero.heroic.constructor === Boolean}
 function heroHasName(){ return heroExists() && hero.name && hero.name.constructor === String }
@@ -10,11 +23,11 @@ function weaponHasType(){ return hero.weapon.type && hero.weapon.type.constructo
 function weaponHasDamage(){ return hero.weapon.damage && hero.weapon.damage.constructor === Number }
 function weaponHasStats(){ return heroHasWeapon() && weaponHasType() && weaponHasDamage() }
 
-function allHeroTestPassed() { 
-    return heroExists() 
-        && heroHasInventory() 
-        && heroHasHealth() 
-        && heroHasWeapon() 
+function allHeroTestPassed() {
+    return heroExists()
+        && heroHasInventory()
+        && heroHasHealth()
+        && heroHasWeapon()
         && weaponHasStats()
 }
 
@@ -46,7 +59,7 @@ function functionsExist() {
 
 function dealDamageWorks() {
     try {
-        return dealDamage({ weapon: { damage: 5 }}, { health: 10 }).health === 5    
+        return dealDamage({ weapon: { damage: 5 }}, { health: 10 }).health === 5
     } catch (error) {
         return false
     }
@@ -77,10 +90,10 @@ function doBattleWorks() {
 
 function pickUpItemWorks() {
     try {
-        return pickUpItem({ inventory: [] }, { type: 'gun', damage: '100'}).inventory.length === 1    
+        return pickUpItem({ inventory: [] }, { type: 'gun', damage: '100'}).inventory.length === 1
     } catch (error) {
         return false
-    }    
+    }
 }
 
 function equipWeaponWorks() {
@@ -101,19 +114,19 @@ function restWorks() {
 }
 
 function allFunctionTestsPassed() {
-    return functionsExist() 
-        && dealDamageWorks() 
-        && doBattleGuardStatementWorks() 
-        && doBattleWorks() 
-        && pickUpItemWorks() 
-        && equipWeaponWorks() 
+    return functionsExist()
+        && dealDamageWorks()
+        && doBattleGuardStatementWorks()
+        && doBattleWorks()
+        && pickUpItemWorks()
+        && equipWeaponWorks()
         && restWorks()
 }
 
 function functionTests(){
     console.log('Function tests:')
     console.assert(functionsExist(), 'You have not declared all necessary functions yet')
-    
+
     if (!functionsExist()) return
 
     console.assert(dealDamageWorks(), 'dealDamage is not working as it should')
@@ -124,7 +137,7 @@ function functionTests(){
     console.assert(restWorks(), 'rest is not working as it should')
 
     if(!allFunctionTestsPassed()) return
-    
+
     console.log('%c Function tests passed! ', 'color: #32CD32')
 }
 
@@ -134,5 +147,3 @@ function runTests(){
 }
 
 runTests()
-
-
