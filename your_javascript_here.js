@@ -123,3 +123,27 @@ enemyId.onclick = function(){
   console.log('Hero\'s health is ' + hero.health);
   console.log('Enemy\'s health is ' + enemy.health);
 }
+
+// Get the backpack image page element by getElementById
+let backpackId= document.getElementById('backpack');
+// Call the equipWeapon function when the backpack image is clicked
+backpackId.onclick = function(){
+  // check whether there are any weapons left
+  if (hero.inventory.length === 0){
+    windows.alert('Sorry, no weapons left to be equiped');
+    return
+  }
+  // Ask and force the user to enter a valid weapon index
+  let index;
+  let indexMax=hero.inventory.length-1
+  let message='Please enter a valid weapon index number';
+  message=message+'\nThe index should be between 0 and ' + indexMax
+  index=parseInt(window.prompt(message))
+  while (index<0 || index > hero.inventory.length-1 || isNaN(index)) {
+    index = parseInt(window.prompt(message))
+  }
+  // Call the equipWeapon function with the given index
+  hero=equipWeapon(hero,index);
+  console.log('Hero\'s equiped weapon is ' + hero.weapon.type);
+  console.log(hero)
+}
