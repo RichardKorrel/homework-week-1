@@ -4,7 +4,7 @@
 let hero = {
   name: 'Floris',
   heroic: true,
-  inventory: [],
+  inventory: [{type:'sword',damage:1}],
   health: 10,
   weapon: {
     type: 'sword',
@@ -87,3 +87,21 @@ function doBattle (heroicCreature,creature) {
 }
 
 // UI
+
+// Get the bed image page element by getElementById
+let bedId= document.getElementById('bed');
+console.log(bedId);
+// Call the rest function when the bed image is clicked
+bedId.onclick = function(){
+  rest(hero);
+  console.log('Hero\'s health is ' + hero.health)
+}
+
+// Get the weapon image page element by getElementById
+let weaponId= document.getElementById('weapon');
+// Call the pickupItem function when the weapon image is clicked
+weaponId.onclick = function(){
+  pickUpItem(hero,{type:'lance',damage:2});
+  console.log('Hero\'s picked up item is ' + hero.inventory[hero.inventory.length-1].type);
+  console.log(hero)
+}
