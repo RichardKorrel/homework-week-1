@@ -4,11 +4,11 @@
 let hero = {
   name: 'Floris',
   heroic: true,
-  inventory: [{type:'sword',damage:1}],
+  inventory: [{type:'sword',damage:3}],
   health: 10,
   weapon: {
     type: 'sword',
-    damage: 1 /* if damage is set to 0 (no damage) weaponHasDamage
+    damage: 3 /* if damage is set to 0 (no damage) weaponHasDamage
                  returns false! So instead set it to 1 (slight damage) to
                  make the test work */
   }
@@ -59,8 +59,9 @@ function equipWeapon (creature, index){
 function doBattle (heroicCreature,creature) {
   // Make a guard clause which checks if `heroicCreature` is `heroic`.
   // If `heroicCreature` is not `heroic` return `null` from this function.
-  if (!heroicCreature.heroic)
+  if (!heroicCreature.heroic){
     return null;
+  }
   // While `heroicCreature` and `creature` have health above zero they take
   // turns dealingDamage to eachother: `heroicCreature` deals damage to
   // `creature` first. If `creature` survives it deals damage to
@@ -104,4 +105,21 @@ weaponId.onclick = function(){
   pickUpItem(hero,{type:'lance',damage:2});
   console.log('Hero\'s picked up item is ' + hero.inventory[hero.inventory.length-1].type);
   console.log(hero)
+}
+
+// Get the enemy image page element by getElementById
+let enemyId= document.getElementById('enemy');
+// Call the doBattle function when the weapon image is clicked
+enemyId.onclick = function(){
+  let enemy = {health:10,weapon:{damage:2}}
+  console.log('Hero\'s weapon\'s damage is ' + hero.weapon.damage);
+  console.log('Enemy\'s weapon\'s damage is ' + enemy.weapon.damage);
+  console.log('Before the battle:')
+  console.log('Hero\'s health is ' + hero.health);
+  console.log('Enemy\'s health is ' + enemy.health);
+  console.log('The battle starts');
+  doBattle(hero,enemy);
+  console.log('After the battle:')
+  console.log('Hero\'s health is ' + hero.health);
+  console.log('Enemy\'s health is ' + enemy.health);
 }
