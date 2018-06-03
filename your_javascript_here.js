@@ -147,3 +147,33 @@ backpackId.onclick = function(){
   console.log('Hero\'s equiped weapon is ' + hero.weapon.type);
   console.log(hero)
 }
+
+// Declare a function that writes the hero's name, health, weapon type,
+// weapon damage to the page.
+function displayStats(){
+  // select the document ul element by id heroStatus
+  let heroStatusId = document.getElementById('heroStatus');
+
+  // Declare a helper function to create/add one status item as a
+  // list item to the web page including an id for later retrieval
+  function addHeroStatusItemToPage(listId,listItem){
+    // Create a new list element
+    let newListItem = document.createElement("li");
+    // Set the id attribute for the new status item
+    newListItem.setAttribute("id", listId);
+    // Create the content for the new status item
+    let newContent = document.createTextNode(listItem);
+    // Add the new status item to the newly created list element
+    newListItem.appendChild(newContent);
+    // Add the new status item to the document ul element
+    heroStatusId.appendChild(newListItem);
+  }
+  // Add the status items to the web page
+  addHeroStatusItemToPage('nameHero','Name: ' + hero.name);
+  addHeroStatusItemToPage('healthHero','Health: ' + hero.health);
+  addHeroStatusItemToPage('weaponTypeHero','Weapon type: ' + hero.weapon.type);
+  addHeroStatusItemToPage('weaponDamageHero','Weapon damage: ' + hero.weapon.damage);
+}
+
+// Call the displayStats function
+displayStats();
