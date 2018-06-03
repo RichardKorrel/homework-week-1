@@ -4,7 +4,10 @@
 let hero = {
   name: 'Floris',
   heroic: true,
-  inventory: [{type:'sword',damage:3}],
+  inventory: [{type:'sword',damage:3},
+              {type:'knife',damage:1},
+              {type:'broomstick',damage:2},
+             ],
   health: 10,
   weapon: {
     type: 'sword',
@@ -177,3 +180,33 @@ function displayStats(){
 
 // Call the displayStats function
 displayStats();
+
+// Declare a function that writes the hero's inventory to the page.
+function displayInventory(){
+  // select the document ul element by id heroInventory
+  let heroInventoryId = document.getElementById('heroInventory');
+
+  // Declare a helper function to create/add the next inventory item as a
+  // list item to the web page including an id for later retrieval
+  function addHeroInventoryItemToPage(listId,listItem){
+    // Create a new list element
+    let newListItem = document.createElement("li");
+    // Set the id attribute for the new inventory item
+    newListItem.setAttribute("id", listId);
+    // Create the content for the new inventory item
+    let newContent = document.createTextNode(listItem);
+    // Add the new inventory item to the newly created list element
+    newListItem.appendChild(newContent);
+    // Add the new inventory item to the document ul element
+    heroInventoryId.appendChild(newListItem);
+  }
+  console.log('xxx')
+  // Add the inventory items to the web page
+  hero.inventory.forEach(function(weapon,index){
+    let weaponDescription='Type: ' + weapon.type + ', Damage: ' + weapon.damage;
+    addHeroInventoryItemToPage('weapon'+index,weaponDescription)
+  })
+}
+
+// Call the displayInventory function
+displayInventory();
