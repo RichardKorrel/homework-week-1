@@ -5,17 +5,19 @@ let hero = {
   name: 'Floris',
   heroic: true,
   inventory: [{type:'sword',damage:3},
-              {type:'knife',damage:1},
-              {type:'broomstick',damage:2},
+              {type:'knife',damage:2},
+              {type:'cannonball',damage:10},
              ],
   health: 10,
   weapon: {
-    type: 'sword',
-    damage: 3 /* if damage is set to 0 (no damage) weaponHasDamage
+    type: 'broomstick',
+    damage: 1 /* if damage is set to 0 (no damage) weaponHasDamage
                  returns false! So instead set it to 1 (slight damage) to
                  make the test work */
   }
 }
+// Keep track of the number of inventory items displayed on the web page
+let oldPageInventoryLength=0;
 
 // Game logic
 
@@ -50,9 +52,22 @@ function dealDamage (attacker, defender){
 function equipWeapon (creature, index){
   // Modify the `weapon` of the `creature` by assigning it the value of the
   // `index`th element of the `inventory`
+  console.log(creature.inventory);
   creature.weapon=creature.inventory[index];
-  // modify the creature's `inventory` by removing the `index`th element from it
-  creature.inventory=creature.inventory.slice(index+1,index+1);
+  // Modify the creature's `inventory` by removing the `index`th element from it
+
+  //creature.inventory=creature.inventory.splice(index,1);
+  // The splice function did not work, ok let's do with a for loop and push
+
+  let newInventory=[];
+  for (i=0;i<creature.inventory.length;i++){
+    if (i!==index){
+      newInventory.push(creature.inventory[i]);
+    }
+  }
+  creature.inventory=newInventory;
+  console.log('updated inventory');
+  console.log(creature.inventory);
   // Return the creature object
   return creature;
 }
@@ -82,6 +97,7 @@ function doBattle (heroicCreature,creature) {
   // function. Otherwise give the user feedback about the death of their hero
   // with a popup.
   if (heroicCreature.health>0){
+    window.alert('Victory, your hero ' + hero.name + ' killed the enemy!');
     return heroicCreature
   }
   else{
@@ -98,16 +114,17 @@ console.log(bedId);
 // Call the rest function when the bed image is clicked
 bedId.onclick = function(){
   rest(hero);
-  console.log('Hero\'s health is ' + hero.health)
+  console.log('Hero\'s health is ' + hero.health);
+  updateStats()
 }
 
 // Get the weapon image page element by getElementById
 let weaponId= document.getElementById('weapon');
-// Call the pickupItem function when the weapon image is clicked
+// Call the pickUpItem function when the weapon image is clicked
 weaponId.onclick = function(){
-  pickUpItem(hero,{type:'lance',damage:2});
+  pickUpItem(hero,{type:'lance',damage:3});
   console.log('Hero\'s picked up item is ' + hero.inventory[hero.inventory.length-1].type);
-  console.log(hero)
+  updateStats()
 }
 
 // Get the enemy image page element by getElementById
@@ -121,10 +138,12 @@ enemyId.onclick = function(){
   console.log('Hero\'s health is ' + hero.health);
   console.log('Enemy\'s health is ' + enemy.health);
   console.log('The battle starts');
-  doBattle(hero,enemy);
+  let winner=doBattle(hero,enemy);
   console.log('After the battle:')
   console.log('Hero\'s health is ' + hero.health);
   console.log('Enemy\'s health is ' + enemy.health);
+  console.log('Winner\'s health is ' + winner.health);
+  updateStats()
 }
 
 // Get the backpack image page element by getElementById
@@ -133,7 +152,7 @@ let backpackId= document.getElementById('backpack');
 backpackId.onclick = function(){
   // check whether there are any weapons left
   if (hero.inventory.length === 0){
-    windows.alert('Sorry, no weapons left to be equiped');
+    window.alert('Sorry, no weapons left to be equiped');
     return
   }
   // Ask and force the user to enter a valid weapon index
@@ -148,7 +167,8 @@ backpackId.onclick = function(){
   // Call the equipWeapon function with the given index
   hero=equipWeapon(hero,index);
   console.log('Hero\'s equiped weapon is ' + hero.weapon.type);
-  console.log(hero)
+  console.log(hero);
+  updateStats()
 }
 
 // Declare a function that writes the hero's name, health, weapon type,
@@ -172,10 +192,10 @@ function displayStats(){
     heroStatusId.appendChild(newListItem);
   }
   // Add the status items to the web page
-  addHeroStatusItemToPage('nameHero','Name: ' + hero.name);
-  addHeroStatusItemToPage('healthHero','Health: ' + hero.health);
-  addHeroStatusItemToPage('weaponTypeHero','Weapon type: ' + hero.weapon.type);
-  addHeroStatusItemToPage('weaponDamageHero','Weapon damage: ' + hero.weapon.damage);
+  addHeroStatusItemToPage('heroName','Name: ' + hero.name);
+  addHeroStatusItemToPage('heroHealth','Health: ' + hero.health);
+  addHeroStatusItemToPage('heroWeaponType','Weapon type: ' + hero.weapon.type);
+  addHeroStatusItemToPage('heroWeaponDamage','Weapon damage: ' + hero.weapon.damage);
 }
 
 // Call the displayStats function
@@ -199,14 +219,40 @@ function displayInventory(){
     newListItem.appendChild(newContent);
     // Add the new inventory item to the document ul element
     heroInventoryId.appendChild(newListItem);
-  }
-  console.log('xxx')
-  // Add the inventory items to the web page
+  };
+
+  // Add the inventory items to the web page with element id weapon0,weapon1,...
   hero.inventory.forEach(function(weapon,index){
     let weaponDescription='Type: ' + weapon.type + ', Damage: ' + weapon.damage;
     addHeroInventoryItemToPage('weapon'+index,weaponDescription)
-  })
+  });
+  // Remember the length of the current inventory shown on the page,
+  // needed in updateStats
+  oldPageInventoryLength=hero.inventory.length
 }
 
 // Call the displayInventory function
 displayInventory();
+
+// Declare a function that calls `displayStats` and `displayInventory`.
+function updateStats() {
+  // First remove all the status and inventory elements from the page
+  let parent = document.getElementById("heroStatus");
+  var child = document.getElementById("heroName");
+  parent.removeChild(child);
+  parent.removeChild(document.getElementById("heroHealth"));
+  parent.removeChild(document.getElementById("heroWeaponType"));
+  parent.removeChild(document.getElementById("heroWeaponDamage"));
+  parent = document.getElementById("heroInventory");
+  // For the inventory run a for loop for the remaining weapons left
+  // and remove each one from the page by element id weapon0, weapon1, ...
+  for (index=0;index<oldPageInventoryLength;index++) {
+    parent.removeChild(document.getElementById("weapon"+index));
+  }
+  // Now call the displayStats and displayInventory functions
+  displayStats();
+  displayInventory()
+}
+
+// Call the updateStats function
+updateStats();
